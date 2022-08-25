@@ -1,123 +1,105 @@
-import React from 'react';
-import { SafeAreaView,Text,Image,View, StyleSheet, StatusBar, ScrollView} from 'react-native';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import React from "react";
+import {
+  View,
+  Text,
+  SafeAreaView,
+  Keyboard,
+  ScrollView,
+  Alert,
+} from "react-native";
 
+import COLORS from "../components/colors2";
+import Input from "../components/Input";
+import Loader from "../components/Loader";
+import Button1 from "../components/Button1";
+import LavaJatos from "../components/lavajatos";
 
-export default function Agendar(){
-    return(
-    //criando a parte de cima "agendamento lava-jato"
-    <SafeAreaView style={styles.container}>
-        <StatusBar></StatusBar>
-        <View style={styles.productContainer}>
-            <View style={styles.coin2}>
-                <Image style ={styles.imagem} source={require ('../../assets/coin2.png')} />
-            </View>   
-            <View>
-            <Text style={styles.productText}>Agendamento Lava-Jato </Text>
-            <Text style={styles.productInfo}>Você tem 15% OFF na primeira Lavagem! </Text>
-            </View>
-        </View>
+import api from "../services/api";
 
-        <Text style={styles.titleCategory}>Book a slot</Text>
-        <View style={{height: 80, marginTop: 20, marginBottom:20}}>
-        <ScrollView style={styles.scrollView} horizontal>
-            <View style={styles.dataCaixa}>
-                <Text>MON</Text>
-                <Text style ={{fontWeight: "bold"}}>1</Text>
-            </View>
-            
-            <View style={styles.dataCaixa}>
-                <Text>MON</Text>
-                <Text style ={{fontWeight: "bold"}}>1</Text>
-            </View>
-            
-            <View style={styles.dataCaixa}>
-                <Text>MON</Text>
-                <Text style ={{fontWeight: "bold"}}>1</Text>
-            </View>
-            
-            <View style={styles.dataCaixa}>
-                <Text>MON</Text>
-                <Text style ={{fontWeight: "bold"}}>1</Text>
-            </View>
-            <View style={styles.dataCaixa}>
-                <Text>MON</Text>
-                <Text style ={{fontWeight: "bold"}}>1</Text>
-            </View>
-           
-            <View style={styles.dataCaixa}>
-                <Text>MON</Text>
-                <Text style ={{fontWeight: "bold"}}>1</Text>
-            </View>
-        </ScrollView> 
-        </View>
-         <View>
-            
-            <View style={styles.timeContainer}>
-                <Text>7:00 -8:00</Text>
-            <View>
-                <Text>Free</Text>
-            </View>
-            </View>
-         </View>
-        </SafeAreaView>
+const Agendar = ({ navigation }) => {
+  const [inputs, setInputs] = React.useState({
+    Data: "",
+    Hora: "",
+    Placa: "",
+  });
+  const [errors, setErrors] = React.useState({});
+  const [loading, setLoading] = React.useState(false);
 
-    );
-}
-    
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'flex-start',
-        paddingHorizontal:30,
-        paddingVertical:30,
+  const validate = () => {
+    Keyboard.dismiss();
+    let isValid = true;
 
-    },
-    productContainer: {
-        height: 80,
-        flexDirection: 'row',
-        bordercolor: '#DBE3EB',
-        borderWidth: 1,
-        alignItems: 'center'
-    },
-    productText: {
-        fontWeight: 'bold',
-        color: 'black',
-        fontSize: 18
-    },
-    productInfo: {
-        color: '#708392',
-        fontsize:13,
-    },
-    imagem: {
-        height: 50,
-        width: 50,
-        justifyContent: 'center'
-    },
-    dataCaixa: {
-        height: 73,
-        width: 63,
-        bordercolor: '#c7cbcf',
-        borderWidth: 1,
-        borderRadius: 12,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginRight:20,
-
-    },
-    scrollView: {
-
-    },
-    titleCategory: {
-        fontWeight: 'bold',
-        color:"#708392" ,
-        marginTop: 30,
-        fontSize:20
-        
-    },
-    timeContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+    if (!inputs.Data) {
+      handleError("Digite uma data válida", "Data");
+      isValid = false;
     }
 
-    
-})
+    if (!inputs.Hora) {
+      handleError("Digite uma hora", "Hora");
+      isValid = false;
+    }
+
+    if (!inputs.Placa) {
+      handleError("Digite um número de placa válido", "Placa");
+      isValid = false;
+    }
+  };
+
+  const Link = `Data: ${inputs.Data} Hora: ${inputs.Hora} Placa: ${inputs.Placa}`;
+  console.log(Link);
+
+  const handleOnchange = (text, input) => {
+    setInputs((prevState) => ({ ...prevState, [input]: text }));
+  };
+  const handleError = (error, input) => {
+    setErrors((prevState) => ({ ...prevState, [input]: error }));
+  };
+
+  return (
+    <SafeAreaView style={{ backgroundColor: COLORS.white, flex: 1 }}>
+      <Loader visible={loading} />
+      <ScrollView
+        contentContainerStyle={{ paddingTop: 50, paddingHorizontal: 18 }}
+      >
+        <Text style={{ color: COLORS.black, fontSize: 40, fontWeight: "bold" }}>
+          Agendar
+        </Text>
+        <Text style={{ color: COLORS.grey, fontSize: 18, marginVertical: 10 }}>
+          Combinar um agendamento
+        </Text>
+
+        <View style={{ marginVertical: 20 }}>
+          <Input
+            onChangeText={(text) => handleOnchange(text, "Data")}
+            onFocus={() => handleError(null, "Data")}
+            iconName=""
+            label="Data"
+            placeholder="Digite uma data"
+            error={errors.Data}
+          />
+
+          <Input
+            onChangeText={(text) => handleOnchange(text, "Hora")}
+            onFocus={() => handleError(null, "Hora")}
+            iconName=""
+            label="Hora"
+            placeholder="Informe o horario"
+            error={errors.Hora}
+          />
+          <Input
+            onChangeText={(text) => handleOnchange(text, "Placa")}
+            onFocus={() => handleError(null, "Placa")}
+            iconName=""
+            label="Placa"
+            placeholder="Placa do Veiculo"
+            error={errors.Placa}
+          />
+          <Button1 title="Agendar" onPress={validate} />
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+};
+
+export default Agendar;
