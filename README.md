@@ -1,4 +1,4 @@
-## Aplicativo
+## Aplicativo 
 
 Aplicativo utilizando React Native, Styled Components e React Navigation.
 
@@ -14,7 +14,7 @@ Você precisará ter apenas o [NodeJS](https://nodejs.org) instalado na sua máq
 Depois disso acesse odiretório e instale as dependências executando o seguinte comando:
 ```sh
   $ yarn install # ou npm install
-```
+``
 
 ## Executando a aplicação
 
