@@ -7,6 +7,7 @@ import {
   Keyboard,
   ScrollView,
   Alert,
+  Linking,
 } from "react-native";
 
 import COLORS from "../components/colors2";
@@ -46,8 +47,7 @@ const Agendar = ({ navigation }) => {
     }
   };
 
-  const Link = `Data: ${inputs.Data} Hora: ${inputs.Hora} Placa: ${inputs.Placa}`;
-  console.log(Link);
+  const Link = `https://api.whatsapp.com/send?phone=5587988444656&text=Olá, realizei um agendamento. Poderia conferir? Informações do agendamento: Placa: ${inputs.Placa} | Data: ${inputs.Data} | Hora: ${inputs.Hora}`;
 
   const handleOnchange = (text, input) => {
     setInputs((prevState) => ({ ...prevState, [input]: text }));
@@ -95,7 +95,12 @@ const Agendar = ({ navigation }) => {
             placeholder="Placa do Veiculo"
             error={errors.Placa}
           />
-          <Button1 title="Agendar" onPress={validate} />
+          <Button1
+            title="Agendar"
+            onPress={() => {
+              Linking.openURL(Link);
+            }}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>

@@ -190,7 +190,7 @@ const HomeScreen = ({ navigation }) => {
         <View style={style.searchInputContainer}>
           <Icon name="search" size={30} style={{ marginLeft: 20 }} />
           <TextInput
-            placeholder="Search"
+            placeholder="Buscar"
             style={{ fontSize: 20, paddingLeft: 10 }}
           />
         </View>
