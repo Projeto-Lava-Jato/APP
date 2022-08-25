@@ -123,9 +123,7 @@ const DetailsScreen = ({ navigation, route }) => {
           >
             <Text
               onPress={() => {
-                Linking.openURL(
-                  "https://api.whatsapp.com/send?phone=5587988290714&text=Ol%C3%A1,%20realizei%20um%20agendamento.%20Poderia%20conferir?"
-                );
+                navigation.navigate("Agendar");
               }}
             >
               Fazer um Agendamento
